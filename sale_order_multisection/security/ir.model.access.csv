@@ -1,0 +1,15 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_set_department_user, set department user,model_set_department,sales_team.group_sale_salesman,1,0,0,0
+access_set_department_manager, set department manager,model_set_department,sales_team.group_sale_manager,1,1,1,1
+access_set_sector_user, set sector user,model_set_sector,sales_team.group_sale_salesman,1,0,0,0
+access_set_sector_manager, set sector manager,model_set_sector,sales_team.group_sale_manager,1,1,1,1
+access_set_quality_user, set quality user,model_set_quality,sales_team.group_sale_salesman,1,0,0,0
+access_set_quality_manager, set quality manager,model_set_quality,sales_team.group_sale_manager,1,1,1,1
+access_set_serie_user, set serie user,model_set_serie,sales_team.group_sale_salesman,1,0,0,0
+access_set_serie_manager, set serie manager,model_set_serie,sales_team.group_sale_manager,1,1,1,1
+access_set_type_user, set type user,model_set_type,sales_team.group_sale_salesman,1,0,0,0
+access_set_type_manager, set type manager,model_set_type,sales_team.group_sale_manager,1,1,1,1
+access_set_user, set  user,model_set,sales_team.group_sale_salesman,1,0,0,0
+access_set_manager, set  manager,model_set,sales_team.group_sale_manager,1,1,1,1
+
+

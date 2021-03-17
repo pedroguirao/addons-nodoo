@@ -1,0 +1,152 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+
+    <record id="view_saleorder_set_lines" model="ir.ui.view">
+        <field name="name">Set Lines</field>
+        <field name="model">sale.order</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_view_invoice']" position="after">
+                <button class="oe_stat_button" icon="fa-folder-open" type="object" name="action_view_sets">
+                    <field name="set_lines_count" string="Capít. y UdOs" widget="statinfo"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="sol_set_tree" model="ir.ui.view">
+        <field name="active" eval="True"/>
+        <field name="arch" type="xml">
+            <tree string="Sales Order Lines" decoration-bf="is_udo_section==False" decoration-danger="is_udo_section==True" default_order="code">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="description"/>
+                <field name="quantity" attrs="{'invisible':[('is_udo_section','=',False)]}"/>
+                <field name="section_unit_subtotal"/>
+                <field name="section_subtotal"/>
+                <field name="section_total"/>
+                <field name="is_udo_section" invisible="1"/>
+            </tree>
+        </field>
+        <field name="field_parent" eval="False"/>
+        <field name="groups_id" eval="[(6, 0, [])]"/>
+        <field name="inherit_id" eval="False"/>
+        <field name="key" eval="False"/>
+        <field name="mode">primary</field>
+        <field name="model">sale.order.line</field>
+        <field name="name">SOL Set Tree</field>
+        <field name="priority">99</field>
+        <field name="type">tree</field>
+    </record>
+
+    <record id="sol_set_form" model="ir.ui.view">
+        <field name="name">SOL Set Form</field>
+        <field name="model">sale.order.line</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <form string="Sales Order Item">
+                <!--<header>
+                     <button class="oe_highlight" type="action" name="447" string="Añadir SET al Presupuesto" attrs="{'invisible':['|',('set_id','=',False),('setprocesado','=',True)]}"/>
+                     <button class="oe_highlight" type="action" name="503" string="Actualizar número de Sets en líneas" attrs="{'invisible':['|',('recalcular_uds','=',False),('set_id','=',False)]}"/>
+                     <button class="oe_highlight" type="action" name="567" string="Actualizar precios" context="{'default_udo_id':id,'default_name':name}"/>
+                 </header>-->
+                 <sheet>
+                  <!--    <div class="oe_button_box" name="button_box">
+                         <button class="oe_stat_button" icon="fa-random" type="action" name="509">
+                             <field name="udo_id__sale_order_line_count" string="Líneas" widget="statinfo"/>
+                         </button>
+                     </div>-->
+
+                     <group name="Mostrar secciones existentes con los códigos actuales">
+                         <field name="exist"/>
+                     </group>
+                     <group col="6">
+                         <field name="n1" attrs="{'required':[('n2','!=',False),'|',('n3','!=',False),'|',('n4','!=',False),'|',('n5','!=',False)]}"/>
+                         <field name="n2" attrs="{'required':[('n3','!=',False),'|',('n4','!=',False),'|',('n5','!=',False)]}"/>
+                         <field name="n3" attrs="{'required':[('n4','!=',False),'|',('n5','!=',False)]}"/>
+                         <field name="n4" attrs="{'required':[('n5','!=',False)]}"/>
+                         <field name="n5"/>
+                     </group>
+                     <group col="4">
+                         <field name="is_udo_section"/>
+                         <field name="quantity" attrs="{'invisible':[('is_udo_section','=',False)]}"/>
+                     </group>
+                     <div name="Es unidad de obra" attrs="{'invisible':[('is_udo_section','=',False)]}">
+                         <group>
+                             <field name="set_id" attrs="{'required':[('is_udo_section','=',True)]}"/>
+                             <field name="set_name" attrs="{'required':[('is_udo_section','=',True)],'readonly':[('create_date','=',False)]}"/>
+                             <field name="section_description" attrs="{'readonly':[('create_date','=',False)]}"/>
+                         </group>
+                     </div>
+                     <div name="No es unidad de obra" attrs="{'invisible':[('is_udo_section','=',True)]}">
+                         <group>
+                             <field name="t_name" attrs="{'required':[('is_udo_section','=',False)]}"/>
+                             <field name="description_noset"/>
+                         </group>
+                     </div>
+                     <field name="udoline_ids" readonly="1" context="{'default_cantidad':quantity, 'default_udo_id':id, 'default_order_id':order_id}">
+                         <tree string="Sales Order Lines">
+                             <field name="quantity" attrs="{'invisible':[('display_type','!=','line_section')]}"/>
+                             <field name="product_id" attrs="{'invisible':[('display_type','=','line_section')]}"/>
+                             <field name="name" modifiers="{&quot;required&quot;: true}"/>
+                             <field name="bysetquantity" attrs="{'invisible':[('display_type','!=',False)]}"/>
+                             <field name="product_uom_qty" attrs="{'invisible':[('display_type','!=',False)]}"/>
+                             <field name="product_uom" attrs="{'invisible':[('display_type','!=',False)]}"/>
+                             <field name="price_unit" attrs="{'invisible':[('display_type','!=',False)]}"/>
+                             <field name="discount" attrs="{'invisible':[('display_type','!=',False)]}"/>
+                             <field name="price_subtotal" attrs="{'invisible':[('display_type','!=',False)]}"/>
+                             <field name="display_type" invisible="1"/>
+                             <field name="order_id" invisible="1"/>
+                         </tree>
+                     </field>
+                     <group col="6">
+                         <field name="section_unit_subtotal"/>
+                         <field name="section_subtotal"/>
+                         <field name="section_total"/>
+                     </group>
+                     <group>
+                         <field name="used_code" colspan="4"/>
+                     </group>
+                     <group col="4">
+                         <field name="name" invisible="1"/>
+                         <field name="code" invisible="1"/>
+                         <field name="internal_name" invisible="1"/>
+                         <field name="level" invisible="1"/>
+                         <field name="order_id" invisible="1"/>
+                         <field name="order_partner_id" invisible="1"/>
+                         <field name="display_type" invisible="1"/>
+                         <!--<field name="setprocesado" invisible="1"/>
+                         <field name="recalcular_uds" invisible="1"/>-->
+                         <field name="id" invisible="1"/>
+                         <field name="create_date" invisible="1"/>
+                     </group>
+                 </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_view_set_lines" model="ir.actions.act_window">
+        <field name="auto_search" eval="True"/>
+        <field name="binding_model_id" eval="False"/>
+        <field name="binding_type">action</field>
+        <field name="context">{'search_default_order_id': active_id,'default_order_id': active_id, 'default_display_type': 'line_section','default_name':'.', 'default_quantity':1}</field>
+        <field name="domain">[('order_id', '=', active_id),('display_type','=','line_section')]</field>
+        <field name="groups_id" eval="[(6, 0, [])]"/>
+        <field name="help"><![CDATA[<p>Capítulos y Unidades</p>]]></field>
+        <field name="limit">80</field>
+        <field name="name">Cap Y Udos</field>
+        <field name="res_model">sale.order.line</field>
+        <field name="target">current</field>
+        <field name="type">ir.actions.act_window</field>
+        <!--<field name="view_id" ref="helpdesk.helpdesk_tickets_view_tree"/>-->
+        <field name="usage" eval="False"/>
+        <!--<field name="view_id" eval="ocr_account_invoice_tree"/>-->
+        <field name="view_ids" eval="[(5, 0, 0),
+        (0, 0, {'view_mode': 'tree', 'view_id': ref('sol_set_tree')}),
+        (0, 0, {'view_mode': 'form', 'view_id': ref('sol_set_form')})]"/>
+        <!--<field name="view_mode">tree,form</field>
+        <field name="view_type">tree</field>-->
+    </record>
+
+</odoo>

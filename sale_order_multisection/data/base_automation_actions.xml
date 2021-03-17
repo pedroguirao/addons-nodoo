@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+
+        <record id="udo_rename_section" model="base.automation">
+            <field name="name">=>SOL Renombrar seccion</field>
+            <field name="model_id" ref="sale.model_sale_order_line"/>
+            <field name="state">code</field>
+            <field name="code">
+# Asignar 'name' en función de que sea SECCION o UNIDAD DE OBRA:
+
+# Es UDO y tiene asignado ya el capítulo prinicipal (para que tenga nombre):
+if (record.display_type == 'line_section') and (record.set_id.id) and (record.n1):
+  record['name'] = str(record.code) + str(record.set_name)
+
+# No es UDO (es sección) y ya tiene asignado el capítulo principal (para que tenga nombre):
+elif (record.display_type == 'line_section') and not (record.set_id.id) and (record.n1):
+  record['name'] = str(record.code) + str(record.t_name)
+
+# Es capítulo principal:
+elif (record.display_type == 'line_section') and not (record.n1):
+  record['name'] = str(record.t_name)
+
+
+            </field>
+            <field name="trigger">on_change</field>
+            <field name="on_change_fields">t_name,code,set_name,create_date</field>
+            <field name="active" eval="True"/>
+        </record>
+
+    </data>
+
+</odoo>
